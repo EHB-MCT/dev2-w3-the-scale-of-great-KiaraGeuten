@@ -26,6 +26,8 @@ function addSortEvents() {
   document.getElementById("sort-down").addEventListener("click", function () {
     sortDirection = "down";
     sort();
+    document.querySelector("#sort-down").classList.add("active");
+    document.querySelector("#sort-up").classList.remove("active");
     render(data);
   });
 }
