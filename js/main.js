@@ -1,8 +1,8 @@
 import { getAdjectives } from "./data.js";
 
-let adjectives = "";
+let adjectives;
 let sortDirection = "up";
-let data = "";
+let data;
 
 function init() {
   //TODO: data inladen (adjectives)
@@ -12,9 +12,6 @@ function init() {
 
   //uitrenderen
   render();
-  //TODO: buttons actief
-  addSortEvents();
-  addVoteEvents();
 }
 
 function addSortEvents() {
@@ -36,11 +33,15 @@ function addSortEvents() {
 function addVoteEvents() {
   //add eventlisteners to all upvote and downvote
   const upVoteButtons = document.querySelectorAll(".upvote-button");
-  console.log(upVoteButtons);
   upVoteButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      console.log(this.value);
       upVote(this.value);
+    });
+  });
+  const downVoteButtons = document.querySelectorAll(".downvote-button");
+  downVoteButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      downVote(this.value);
     });
   });
 }
@@ -64,15 +65,23 @@ function sort() {
     });
   }
 }
-
+// FIXME: SORT HOVER
 function render() {
   //TODO:html maken
   //TODO:html sting leeg maken
   let html = "";
+
+  let stat = "bad";
+
   //TODO: add html voor elk
   data.forEach(function (item) {
+    if (item.score >= 6) {
+      stat = "good";
+    } else {
+      stat = "bad";
+    }
     html += `<div class="word-item">
-            <span class="word-score good">${item.score}</span>
+            <span class="word-score ${stat}">${item.score}</span>
             <span>${item.word}</span>
             <div class="vote-buttons">
                 <button value="${item.word}" class="upvote-button">👍</button>
@@ -84,23 +93,30 @@ function render() {
   const locatie = document.getElementById("container");
   //TODO: voeg string aan html toe
   locatie.innerHTML = html;
+  addVoteEvents();
+  addSortEvents();
 }
 
-function upVote(target) {}
+function upVote(target) {
+  updateScore(target, 0.1);
+}
 
-function downVote(target) {}
+function downVote(target) {
+  updateScore(target, -0.1);
+}
 
 function updateScore(word, scoreChange) {
-  const foundIndex = adjectives.findIndex(function (item, index) {
+  const foundIndex = data.findIndex(function (item, index) {
     if (item.word == word) {
       return true;
     }
   });
 
-  if (foundIndex != null) {
-    let newScore = adjectives[foundIndex]["score"] + scoreChange;
-    adjectives[foundIndex]["score"] = Math.round(newScore * 100) / 100;
+  if (foundIndex != -1) {
+    let newScore = data[foundIndex]["score"] + scoreChange;
+    data[foundIndex]["score"] = Math.round(newScore * 100) / 100;
   }
+  render();
 }
 
 init();
