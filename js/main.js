@@ -1,17 +1,21 @@
-import { getAdjectives } from "./data.js";
-
-let adjectives;
 let sortDirection = "up";
 let data;
 
 function init() {
   //TODO: data inladen (adjectives)
   //TODO: JSON CONVERT
-  adjectives = getAdjectives();
-  data = JSON.parse(adjectives);
+
+  fetch("https://dev2-prima.onrender.com/adjectives")
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (result) {
+      data = result;
+      addSortEvents();
+      render();
+    });
 
   //uitrenderen
-  render();
 }
 
 function addSortEvents() {
@@ -100,7 +104,12 @@ function render() {
 }
 
 function upVote(target) {
-  updateScore(target, 0.1);
+  fetch(`https://dev2-prima.onrender.com/upvote/${target.value}`).then(
+    function (response) {
+      console.log("Upvote complete");
+      init();
+    }
+  );
 }
 
 function downVote(target) {
