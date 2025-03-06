@@ -67,13 +67,13 @@ function sort() {
     });
   }
 }
-// FIXME: SORT HOVER
+
 function render() {
   //TODO:html maken
   //TODO:html sting leeg maken
   let html = "";
 
-  let stat = "bad";
+  let stat;
 
   //TODO: add html voor elk
   data.forEach(function (item) {
